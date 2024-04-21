@@ -13,10 +13,11 @@ export default function Explanation() {
         densidad del aire a diferentes altitudes.
       </p>
       <p>
-        La altitud ingresada es de {altitude.toFixed(2)} pies que equivale a {isa.getAltitude().toMeters().toFixed(2)}{' '}
-        metros. Como la temperatura disminuye a una tasa de {isa.temperatureGradient}°C por cada 1000 metros o 1.98°C
-        por cada 1000 pies, hasta la tropopausa que se mantiene constante en -56.6°C. Por lo tanto la temperatura del
-        aire a {altitude.toFixed(2)} pies se obtendrá de la siguiente manera:
+        La altitud ingresada es de {isa.getAltitude().toFeet().toFixed(2)} pies que equivale a{' '}
+        {isa.getAltitude().toMeters().toFixed(2)} metros. Como la temperatura disminuye a una tasa de{' '}
+        {isa.temperatureGradient}°C por cada 1000 metros o 1.98°C por cada 1000 pies, hasta la tropopausa que se
+        mantiene constante en -56.6°C. Por lo tanto la temperatura del aire a {altitude.toFixed(2)} pies se obtendrá de
+        la siguiente manera:
         <div className="text-center text-sm font-bold my-2">
           t = T<sub>0</sub> + (a * h)/1000
         </div>
