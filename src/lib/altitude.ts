@@ -7,7 +7,7 @@
 export default class Altitude {
   private readonly value: number;
 
-  constructor(value) {
+  constructor(value: number) {
     this.value = value;
   }
 
