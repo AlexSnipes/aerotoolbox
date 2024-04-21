@@ -14,7 +14,6 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "aerotoolbox-cli": "git+ssh://git@github.com:AlexSnipes/aerotoolbox-cli.git",
     "d3": "^7.9.0",
     "d3-org-chart": "^3.1.1",
     "jotai": "^2.8.0",
