@@ -16,6 +16,6 @@ export default class Altitude {
   }
 
   toFeet() {
-    return this.value / 0.3048;
+    return this.value / 1;
   }
 }

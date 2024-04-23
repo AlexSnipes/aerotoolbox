@@ -15,7 +15,7 @@ export default class ISA {
   temperatureGradient = 6.5; // Celsius/1000 meters;
   standardTemperature = 15; // Celsius;
   private standardGravity = 9.80665; // m/s^2;
-  private standardPressure = 1013.25; // mb;
+  standardPressure = 1013.25; // mb;
   private densitySL = 1.225; // kg/m^3;
   private adiabaticIndex = 1.4;
   private standardGasConstant = 287.05; // J/(kg*K)
