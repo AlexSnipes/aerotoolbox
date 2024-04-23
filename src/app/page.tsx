@@ -8,7 +8,7 @@ export default function Home() {
       <div className="sm:w-6/12">
         <Toolbox params={{ id: '1' }} />
       </div>
-      <div className="sm:w-6/12">
+      <div className="sm:w-6/12 sm:mt-0 mt-2">
         <Explanation />
       </div>
     </div>

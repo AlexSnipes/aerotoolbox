@@ -126,9 +126,8 @@ export default function Toolbox({ params }: { params: { id: string } }) {
         <div className="block pl-2 font-semibold text-xl self-start text-gray-700">
           <h2 className="leading-relaxed">Calculadora de atmósfera estándar</h2>
           <p className="text-sm text-gray-500 dark:text-gray-200 font-normal leading-relaxed hidden sm:block">
-            Esta calculadora de atmósfera estándar se basa en el modelo de 1976 de la Atmósfera Estándar Internacional
-            (ISA) que ayuda a entender los calculos en la asignatura "Conocimientos Aeronáuticos y Espaciales 1" de la
-            carrera Ingeniería Aeroespacial.
+            La atmósfera estándar internacional (ISA) es un modelo atmosférico que describe cómo cambian las propiedades
+            de la atmósfera con la altitud.
           </p>
         </div>
       </div>

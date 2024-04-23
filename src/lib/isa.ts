@@ -45,8 +45,10 @@ export default class ISA {
     return parseFloat((this.calculatePressure().toMb(2) / this.standardPressure).toFixed(4));
   }
 
-  calculateTemperatureRatio() {
-    return parseFloat((this.calculateTemperature().toKelvin() / (this.standardTemperature + this.kelvin)).toFixed(3));
+  calculateTemperatureRatio(precision = 3) {
+    return parseFloat(
+      (this.calculateTemperature().toKelvin() / (this.standardTemperature + this.kelvin)).toFixed(precision),
+    );
   }
   calculateTemperature() {
     const result = this.standardTemperature - (this.temperatureGradient * this.altitude.toMeters()) / 1000;
@@ -62,6 +64,9 @@ export default class ISA {
     const R = 8.31447; // Constante de gas universal en J/(mol·K)
 
     const exponent = (this.standardGravity * M) / (R * L);
+    console.log(exponent);
+    console.log(1 - (L * this.altitude.toMeters()) / T0);
+    console.log(this.calculateTemperatureRatio(16));
     const pressure = P0 * Math.pow(1 - (L * this.altitude.toMeters()) / T0, exponent);
     return new Pressure(pressure);
   }
