@@ -184,7 +184,7 @@ export default function Toolbox({ params }: { params: { id: string } }) {
           </p>
         </div>
         <div className="mb-6">
-          <label htmlFor="density">Density</label>
+          <label htmlFor="density">Densidad</label>
           <div className="flex items-center space-x-4">
             <input readOnly id="density" {...register('density', { required: false })} />
             <select {...register('densityUnit', { required: false, onChange: handleDensity })}>
