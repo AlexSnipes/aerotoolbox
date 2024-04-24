@@ -1,6 +1,6 @@
 {
-  "name": "aerotoolbox",
-  "version": "0.404.20",
+  "name": "aerospace-toolbox",
+  "version": "0.404.23",
   "private": true,
   "scripts": {
     "dev": "next dev -p 7001",

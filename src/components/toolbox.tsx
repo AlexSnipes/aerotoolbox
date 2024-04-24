@@ -158,7 +158,7 @@ export default function Toolbox({ params }: { params: { id: string } }) {
           </p>
         </div>
         <div className="mb-6">
-          <label htmlFor="temperature">Temperature</label>
+          <label htmlFor="temperature">Temperatura</label>
           <div className="flex items-center space-x-4">
             <input readOnly id="temperature" {...register('temperature', { required: false })} />
             <select {...register('temperatureUnit', { required: false, onChange: handleChangeTemperatureUnit })}>
@@ -171,7 +171,7 @@ export default function Toolbox({ params }: { params: { id: string } }) {
           </p>
         </div>
         <div className="mb-6">
-          <label htmlFor="pressure">Pressure</label>
+          <label htmlFor="pressure">Presión</label>
           <div className="flex items-center space-x-4">
             <input readOnly id="pressure" {...register('pressure', { required: false })} />
             <select {...register('pressureUnit', { required: false, onChange: handlePressureUnit })}>
