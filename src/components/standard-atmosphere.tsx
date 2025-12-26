@@ -2,7 +2,7 @@
 import React from 'react';
 import Toolbox from '@/components/toolbox';
 import Explanation from '@/components/explanation';
-export default function Home() {
+export default function StandardAtmosphere() {
   return (
     <div className=" relative py-3 sm:mx-auto sm:flex gap-2">
       <div className="sm:w-6/12">

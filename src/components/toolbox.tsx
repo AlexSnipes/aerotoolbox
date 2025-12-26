@@ -1,4 +1,4 @@
-'use client';
+import { FEET_TO_METERS } from '@/lib/constants';
 import { useForm } from 'react-hook-form';
 import ISA from '@/lib/isa';
 import { useEffect } from 'react';
@@ -7,9 +7,12 @@ import { FaRegQuestionCircle } from 'react-icons/fa';
 import { useAtom } from 'jotai/index';
 import { altitudeAtom } from '@/store';
 
+import { useISACalculator } from '@/hooks/use-isa-calculator';
+
 export default function Toolbox({ params }: { params: { id: string } }) {
   let isa: ISA = new ISA(0);
   const [altitude, setAltitude] = useAtom<number>(altitudeAtom);
+  const form = useForm();
   const {
     register,
     handleSubmit,
@@ -17,43 +20,11 @@ export default function Toolbox({ params }: { params: { id: string } }) {
     setValue,
     trigger,
     formState: { errors },
-  } = useForm();
+  } = form;
 
-  const changeValue = (data: any) => {
-    const { altitude, temperature, sslCertificate, sslPrivateKey } = data;
-    const isa = new ISA(altitude);
-    setValue('temperature', isa.calculateTemperature().toCelsius());
-  };
+  useISACalculator(form, setAltitude);
 
-  useEffect(() => {
-    isa.setAltitude(watch('altitudeUnit') === 'meters' ? watch('altitude') / 0.3048 : watch('altitude'));
-    setAltitude(watch('altitudeUnit') === 'meters' ? watch('altitude') / 0.3048 : watch('altitude'));
-    if (watch('temperatureUnit') === 'kelvin') {
-      setValue('temperature', isa.calculateTemperature().toKelvin());
-    } else if (watch('temperatureUnit') === 'celsius') {
-      setValue('temperature', isa.calculateTemperature().toCelsius());
-    }
-    if (watch('pressureUnit') === 'inHg') {
-      setValue('pressure', isa.calculatePressure().toInHg());
-    } else if (watch('pressureUnit') === 'mb') {
-      setValue('pressure', isa.calculatePressure().toMb());
-    }
-    setValue('sigma', isa.calculateDensity().toSigma());
-    setValue('delta', isa.calculatePressureRatio());
-    setValue('theta', isa.calculateTemperatureRatio());
-    if (watch('densityUnit') === 'kg/m3') {
-      setValue('density', isa.calculateDensity().toKgM3());
-    } else if (watch('densityUnit') === 'kgf-s2/m4') {
-      setValue('density', isa.calculateDensity().toKgfS2M4());
-    }
-    if (watch('speedOfSoundUnit') === 'm/s') {
-      setValue('speedOfSound', isa.calculateSpeedOfSound().toMs());
-    } else if (watch('speedOfSoundUnit') === 'knots') {
-      setValue('speedOfSound', isa.calculateSpeedOfSound().toKnots());
-    }
-  }, [watch('altitude'), watch('altitudeUnit')]);
-
-  const handleInputChange = async (event: { target: { name: any } }) => {
+  const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const fieldName = event.target.name;
     const isValid = await trigger(fieldName);
     if (isValid) {
@@ -63,20 +34,20 @@ export default function Toolbox({ params }: { params: { id: string } }) {
     }
   };
 
-  const handleChangeAltitudeUnit = (event: { target: { value: any } }) => {
+  const handleChangeAltitudeUnit = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     const altitude = watch('altitude');
     if (value === 'meters') {
-      setValue('altitude', altitude * 0.3048);
+      setValue('altitude', altitude * FEET_TO_METERS);
     } else {
-      setValue('altitude', altitude / 0.3048);
+      setValue('altitude', altitude / FEET_TO_METERS);
     }
   };
 
-  const handleChangeTemperatureUnit = (event: { target: { value: any } }) => {
+  const handleChangeTemperatureUnit = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     const temperature = watch('temperature');
-    isa.setAltitude(watch('altitudeUnit') === 'meters' ? watch('altitude') / 0.3048 : watch('altitude'));
+    isa.setAltitude(watch('altitudeUnit') === 'meters' ? watch('altitude') / FEET_TO_METERS : watch('altitude'));
     if (value === 'kelvin') {
       setValue('temperature', isa.calculateTemperature().toKelvin());
     } else {
@@ -84,9 +55,10 @@ export default function Toolbox({ params }: { params: { id: string } }) {
     }
   };
 
-  const handlePressureUnit = (event: { target: { value: any } }) => {
+
+  const handlePressureUnit = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
-    isa.setAltitude(watch('altitudeUnit') === 'meters' ? watch('altitude') / 0.3048 : watch('altitude'));
+    isa.setAltitude(watch('altitudeUnit') === 'meters' ? watch('altitude') / FEET_TO_METERS : watch('altitude'));
     const pressure = watch('pressure');
     if (value === 'inHg') {
       setValue('pressure', isa.calculatePressure().toInHg());
@@ -95,10 +67,10 @@ export default function Toolbox({ params }: { params: { id: string } }) {
     }
   };
 
-  const handleDensity = (event: { target: { value: any } }) => {
+  const handleDensity = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     const density = watch('density');
-    isa.setAltitude(watch('altitudeUnit') === 'meters' ? watch('altitude') / 0.3048 : watch('altitude'));
+    isa.setAltitude(watch('altitudeUnit') === 'meters' ? watch('altitude') / FEET_TO_METERS : watch('altitude'));
     if (value === 'kg/m3') {
       setValue('density', isa.calculateDensity().toKgM3());
     } else if (value === 'kgf-s2/m4') {
@@ -106,16 +78,17 @@ export default function Toolbox({ params }: { params: { id: string } }) {
     }
   };
 
-  const handleSpeedOfSoundUnit = (event: { target: { value: any } }) => {
+  const handleSpeedOfSoundUnit = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     const speedOfSound = watch('speedOfSound');
-    isa.setAltitude(watch('altitudeUnit') === 'meters' ? watch('altitude') / 0.3048 : watch('altitude'));
+    isa.setAltitude(watch('altitudeUnit') === 'meters' ? watch('altitude') / FEET_TO_METERS : watch('altitude'));
     if (value === 'm/s') {
       setValue('speedOfSound', isa.calculateSpeedOfSound().toMs());
     } else if (value === 'knots') {
       setValue('speedOfSound', isa.calculateSpeedOfSound().toKnots());
     }
   };
+
 
   return (
     <div className="card ">
@@ -149,7 +122,7 @@ export default function Toolbox({ params }: { params: { id: string } }) {
               })}
             />
             <select {...register('altitudeUnit', { required: false, onChange: handleChangeAltitudeUnit })}>
-              <option value="feet">Pies</option>
+              <option value="feet">Feets</option>
               <option value="meters">Metros</option>
             </select>
           </div>
@@ -182,6 +155,7 @@ export default function Toolbox({ params }: { params: { id: string } }) {
           <p className="helper">
             La presión del aire disminuye con la altitud. La presión del aire a nivel del mar es de 1013.25 mb.
           </p>
+          0
         </div>
         <div className="mb-6">
           <label htmlFor="density">Densidad</label>

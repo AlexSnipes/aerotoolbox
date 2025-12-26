@@ -9,19 +9,24 @@ import Temperature from '@/lib/temperature';
 import Pressure from '@/lib/pressure';
 import { Density } from '@/lib/density';
 import { SpeedOfSound } from '@/lib/speed-of-sound';
+import {
+  ADIABATIC_INDEX,
+  GAS_CONSTANT_AIR,
+  KELVIN_ZERO_IN_CELSIUS,
+  MOLAR_MASS_AIR,
+  SSL_DENSITY,
+  SSL_PRESSURE_MB,
+  SSL_PRESSURE_PASCALS,
+  SSL_TEMPERATURE_CELSIUS,
+  SSL_TEMPERATURE_KELVIN,
+  STANDARD_GRAVITY,
+  TEMPERATURE_GRADIENT_C_PER_1000M,
+  TEMPERATURE_GRADIENT_K_PER_M,
+  UNIVERSAL_GAS_CONSTANT,
+} from './constants';
 
 export default class ISA {
-  private altitude;
-  temperatureGradient = 6.5; // Celsius/1000 meters;
-  standardTemperature = 15; // Celsius;
-  private standardGravity = 9.80665; // m/s^2;
-  standardPressure = 1013.25; // mb;
-  private densitySL = 1.225; // kg/m^3;
-  private adiabaticIndex = 1.4;
-  private standardGasConstant = 287.05; // J/(kg*K)
-  private kelvin = 273.15;
-  //private pressureGradient = 1.225; // mb/1000 meters;
-  /*private standardDensity = 1.225 // kg/m^3;*/
+  private altitude: Altitude;
 
   /**
    * @param {number} altitude - The altitude in feet
@@ -30,7 +35,7 @@ export default class ISA {
     this.altitude = new Altitude(altitude);
   }
 
-  setAltitude(altitude: any) {
+  setAltitude(altitude: number) {
     this.altitude = new Altitude(altitude);
   }
 
@@ -42,31 +47,30 @@ export default class ISA {
    * Calculate pressure ratio (δ) based on altitude
    */
   calculatePressureRatio() {
-    return parseFloat((this.calculatePressure().toMb(2) / this.standardPressure).toFixed(4));
+    return parseFloat((this.calculatePressure().toMb(2) / SSL_PRESSURE_MB).toFixed(4));
   }
 
   calculateTemperatureRatio(precision = 3) {
     return parseFloat(
-      (this.calculateTemperature().toKelvin() / (this.standardTemperature + this.kelvin)).toFixed(precision),
+      (this.calculateTemperature().toKelvin() / (SSL_TEMPERATURE_CELSIUS + KELVIN_ZERO_IN_CELSIUS)).toFixed(precision),
     );
   }
   calculateTemperature() {
-    const result = this.standardTemperature - (this.temperatureGradient * this.altitude.toMeters()) / 1000;
+    // result = 15 - (6.5 * km)
+    const result = SSL_TEMPERATURE_CELSIUS - (TEMPERATURE_GRADIENT_C_PER_1000M * this.altitude.toMeters()) / 1000;
     const temperature = new Temperature(result);
     return temperature;
   }
 
   calculatePressure() {
-    const P0 = 101325; // Presión al nivel del mar en Pascales
-    const L = 0.0065; // Gradiente de temperatura en K/m
-    const T0 = 288.15; // Temperatura al nivel del mar en Kelvin
-    const M = 0.0289644; // Masa molar del aire en kg/mol
-    const R = 8.31447; // Constante de gas universal en J/(mol·K)
+    const P0 = SSL_PRESSURE_PASCALS;
+    const L = TEMPERATURE_GRADIENT_K_PER_M;
+    const T0 = SSL_TEMPERATURE_KELVIN;
+    const M = MOLAR_MASS_AIR;
+    const R = UNIVERSAL_GAS_CONSTANT;
 
-    const exponent = (this.standardGravity * M) / (R * L);
-    console.log(exponent);
-    console.log(1 - (L * this.altitude.toMeters()) / T0);
-    console.log(this.calculateTemperatureRatio(16));
+    // Exponent = (g * M) / (R * L)
+    const exponent = (STANDARD_GRAVITY * M) / (R * L);
     const pressure = P0 * Math.pow(1 - (L * this.altitude.toMeters()) / T0, exponent);
     return new Pressure(pressure);
   }
@@ -76,15 +80,15 @@ export default class ISA {
    */
 
   calculateDensity() {
-    let temperatureSL = this.standardTemperature + 273.15; // K
+    const temperatureSL = SSL_TEMPERATURE_CELSIUS + KELVIN_ZERO_IN_CELSIUS; // K
     const temperatureRelative = this.calculateTemperature().toKelvin();
-    const density = (this.densitySL * this.calculatePressureRatio() * temperatureSL) / temperatureRelative;
+    const density = (SSL_DENSITY * this.calculatePressureRatio() * temperatureSL) / temperatureRelative;
     return new Density(density);
   }
 
   calculateSpeedOfSound() {
     const temperature = this.calculateTemperature().toKelvin();
-    const speedOfSound = Math.sqrt(this.adiabaticIndex * this.standardGasConstant * temperature);
+    const speedOfSound = Math.sqrt(ADIABATIC_INDEX * GAS_CONSTANT_AIR * temperature);
     return new SpeedOfSound(speedOfSound);
   }
 }

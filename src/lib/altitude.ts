@@ -4,6 +4,8 @@
  * @Description: This class is used to calculate the International Atmosphere Standard
  * @Version: 0.404.17
  */
+import { FEET_TO_METERS } from './constants';
+
 export default class Altitude {
   private readonly value: number;
 
@@ -12,7 +14,7 @@ export default class Altitude {
   }
 
   toMeters() {
-    return this.value * 0.3048;
+    return this.value * FEET_TO_METERS;
   }
 
   toFeet() {

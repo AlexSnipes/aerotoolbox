@@ -6,6 +6,7 @@ export default {
   },
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.(m)?js$': '$1',
+    '^@/(.*)$': '<rootDir>/src/$1',
   },
   testRegex: '(/tests/.*|(\\.|/)(test|spec))\\.(m)?ts$',
   coverageDirectory: 'coverage',

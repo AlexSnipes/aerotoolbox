@@ -15,22 +15,22 @@ export default class Pressure {
     return parseFloat((this.value / 100).toFixed(round));
   }
   toAtm(): number {
-    return this.value * 0.96784110535469;
+    return this.value / 101325;
   }
   toBar(): number {
-    return this.value * 1;
+    return this.value / 100000;
   }
   toPsi(): number {
-    return this.value * 14.503773773;
+    return this.value * 0.0001450377;
   }
   toMmhg(): number {
-    return this.value * 750.06168270417;
+    return this.value * 0.00750062;
   }
 
   /**
-   * From bar to inHg
+   * Convert Pascals to inHg
    */
   toInHg(): number {
-    return this.value / 3386.3886666667;
+    return this.value / 3386.389;
   }
 }

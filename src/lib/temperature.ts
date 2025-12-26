@@ -4,6 +4,8 @@
  * @Description: This class is used to calculate the International Atmosphere Standard
  * @Version: 0.404.17
  */
+import { KELVIN_ZERO_IN_CELSIUS } from './constants';
+
 export default class Temperature {
   private readonly value: number;
 
@@ -19,13 +21,13 @@ export default class Temperature {
   }
 
   toKelvin() {
-    return parseFloat((this.value + 273.15).toFixed(2));
+    return parseFloat((this.value + KELVIN_ZERO_IN_CELSIUS).toFixed(2));
   }
 
   /**
    * Convert Kelvin to Fahrenheit
    */
   toFahrenheit() {
-    return ((this.value - 273.15) * 9) / 5 + 32;
+    return (this.value * 9) / 5 + 32;
   }
 }
