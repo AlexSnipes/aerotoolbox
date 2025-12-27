@@ -52,11 +52,11 @@ export default function LiftAndDragExplanation() {
         <div>
           <h3>Sustentación</h3>
           <div className="text-center text-sm font-bold my-2">
-            L = Cl * S * 1/2 * ρ * v<sup>2</sup>
+            L = CL * S * 1/2 * ρ * v<sup>2</sup>
           </div>
           <div>
             <ul>
-              <li>Cl = Coeficiente de sustentación</li>
+              <li>CL = Coeficiente de sustentación</li>
               <li>S = Superficie Alar</li>
               <li>ρ = Densidad de altitud</li>
               <li>v = Velocidad del avión</li>
@@ -75,7 +75,7 @@ export default function LiftAndDragExplanation() {
           </div>
           <div>
             <ul>
-              <li>Cl = Coeficiente de resistencia</li>
+              <li>CD = Coeficiente de resistencia</li>
               <li>S = Superficie Alar</li>
               <li>ρ = Densidad de altitud</li>
               <li>v = Velocidad del avión</li>

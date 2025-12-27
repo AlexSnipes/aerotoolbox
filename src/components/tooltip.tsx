@@ -17,7 +17,7 @@ const Tooltip: FC<TooltipProps> = ({ text, children }) => {
       </span>
 
       {isTooltipVisible && (
-        <span className="absolute z-50 bg-gray-800 text-white p-2 rounded-md text-sm -mt-8 ml-2">{text}</span>
+        <span className="absolute z-50 bg-gray-800 text-white p-2 rounded-md text-sm -mt-8 ml-2 pointer-events-none">{text}</span>
       )}
     </>
   );

@@ -143,7 +143,7 @@ export default function LiftAndDrag({ active }: { active: string }) {
                 <label htmlFor="chord" className="mr-1">
                   Cuerda de raiz (c)
                 </label>
-                <Tooltip text="">
+                <Tooltip text="La longitud de la cuerda del perfil alar en el centro del fuselaje.">
                   <FaRegQuestionCircle className="text-gray-500 " />
                 </Tooltip>
               </span>
@@ -154,7 +154,7 @@ export default function LiftAndDrag({ active }: { active: string }) {
                 <label htmlFor="wingspan" className="mr-1">
                   Envergadura (b)
                 </label>
-                <Tooltip text="">
+                <Tooltip text="La distancia total de punta a punta de las alas.">
                   <FaRegQuestionCircle className="text-gray-500 " />
                 </Tooltip>
               </span>
@@ -201,7 +201,7 @@ entra la cuerda en la envergadura)"
                 <label htmlFor="temperature" className="mr-1">
                   CL
                 </label>
-                <Tooltip text="">
+                <Tooltip text="Coeficiente de sustentación: Relaciona la sustentación con la densidad, velocidad y área.">
                   <FaRegQuestionCircle className="text-gray-500 " />
                 </Tooltip>
               </span>
@@ -212,7 +212,7 @@ entra la cuerda en la envergadura)"
                 <label htmlFor="temperature" className="mr-1">
                   CD
                 </label>
-                <Tooltip text="L">
+                <Tooltip text="Coeficiente de resistencia: Cuantifica la resistencia al avance en el aire.">
                   <FaRegQuestionCircle className="text-gray-500 " />
                 </Tooltip>
               </span>
@@ -223,7 +223,7 @@ entra la cuerda en la envergadura)"
                 <label htmlFor="temperature" className="mr-1">
                   Cdi
                 </label>
-                <Tooltip text="">
+                <Tooltip text="Coeficiente de resistencia inducida: Resistencia generada como subproducto de la sustentación.">
                   <FaRegQuestionCircle className="text-gray-500 " />
                 </Tooltip>
               </span>
@@ -234,7 +234,7 @@ entra la cuerda en la envergadura)"
                 <label htmlFor="temperature" className="mr-1">
                   Cdp
                 </label>
-                <Tooltip text="">
+                <Tooltip text="Coeficiente de resistencia parásita: Resistencia debida a la forma y fricción (no sustentación).">
                   <FaRegQuestionCircle className="text-gray-500 " />
                 </Tooltip>
               </span>
