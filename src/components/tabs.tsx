@@ -17,7 +17,7 @@ const Tabs = ({
     <div className={className}>
       <ul className="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400">
         {tabs.map((tab: { label: string; key: string }, index: number) => (
-          <li className="me-2">
+          <li className="me-2" key={tab.key}>
             <a
               onClick={() => setActive(tab.key)}
               href={`#${tab.key}`}

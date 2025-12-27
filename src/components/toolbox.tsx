@@ -122,7 +122,7 @@ export default function Toolbox({ params }: { params: { id: string } }) {
               })}
             />
             <select {...register('altitudeUnit', { required: false, onChange: handleChangeAltitudeUnit })}>
-              <option value="feet">Feets</option>
+              <option value="feet">Pies</option>
               <option value="meters">Metros</option>
             </select>
           </div>
