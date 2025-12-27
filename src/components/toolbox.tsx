@@ -155,7 +155,6 @@ export default function Toolbox({ params }: { params: { id: string } }) {
           <p className="helper">
             La presión del aire disminuye con la altitud. La presión del aire a nivel del mar es de 1013.25 mb.
           </p>
-          0
         </div>
         <div className="mb-6">
           <label htmlFor="density">Densidad</label>

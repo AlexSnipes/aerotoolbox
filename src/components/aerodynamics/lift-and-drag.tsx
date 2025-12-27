@@ -5,9 +5,9 @@ import Tooltip from '@/components/tooltip';
 import { FaRegQuestionCircle } from 'react-icons/fa';
 import { useAtom } from 'jotai/index';
 import { cdAtom, chordAtom, clAtom, densityAtom, velocityAtom, wingAreaAtom, wingspanAtom } from '@/store';
+import { FEET_TO_METERS } from '@/lib/constants';
 
 export default function LiftAndDrag({ active }: { active: string }) {
-  let isa: ISA = new ISA(0);
   const [altitude, setAltitude] = useState<number>();
   const [velocity, setVelocity] = useAtom<number>(velocityAtom);
   const [density, setDensity] = useAtom<number>(densityAtom);
@@ -24,27 +24,37 @@ export default function LiftAndDrag({ active }: { active: string }) {
     trigger,
     formState: { errors },
   } = useForm();
-  const handleChangeAltitudeUnit = (event: { target: { value: any } }) => {
+
+  // We instantiate ISA locally when needed or use a helper to avoid re-creation on every render if it was expensive,
+  // but ISA class is lightweight. To be cleaner, we can use a helper function or just use it inside effects.
+
+  const handleChangeAltitudeUnit = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
-    const altitude = watch('altitude');
+    const currentAltitude = watch('altitude');
     if (value === 'meters') {
-      setValue('altitude', altitude * 0.3048);
+      setValue('altitude', currentAltitude * FEET_TO_METERS);
     } else {
-      setValue('altitude', altitude / 0.3048);
+      setValue('altitude', currentAltitude * Math.pow(FEET_TO_METERS, -1));
     }
   };
 
-  const handleDensity = (event: { target: { value: any } }) => {
+  const handleDensity = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
-    const density = watch('density');
-    isa.setAltitude(watch('altitudeUnit') === 'meters' ? watch('altitude') / 0.3048 : watch('altitude'));
+    const altitudeVal = watch('altitude');
+    const altitudeUnit = watch('altitudeUnit');
+
+    // Calculate ISA based on feet
+    const altitudeInFeet = altitudeUnit === 'meters' ? altitudeVal * Math.pow(FEET_TO_METERS, -1) : altitudeVal;
+    const isa = new ISA(altitudeInFeet);
+
     if (value === 'kg/m3') {
       setValue('density', isa.calculateDensity().toKgM3());
     } else if (value === 'kgf-s2/m4') {
       setValue('density', isa.calculateDensity().toKgfS2M4());
     }
   };
-  const handleInputChange = async (event: { target: { name: any } }) => {
+
+  const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const fieldName = event.target.name;
     const isValid = await trigger(fieldName);
     if (isValid) {
@@ -55,8 +65,12 @@ export default function LiftAndDrag({ active }: { active: string }) {
   };
 
   useEffect(() => {
-    isa.setAltitude(watch('altitudeUnit') === 'meters' ? watch('altitude') / 0.3048 : watch('altitude'));
-    setAltitude(watch('altitudeUnit') === 'meters' ? watch('altitude') / 0.3048 : watch('altitude'));
+    const altitudeVal = watch('altitude');
+    const altitudeUnit = watch('altitudeUnit');
+    const altitudeInFeet = altitudeUnit === 'meters' ? altitudeVal * Math.pow(FEET_TO_METERS, -1) : altitudeVal;
+
+    const isa = new ISA(altitudeInFeet);
+    setAltitude(altitudeInFeet); // The state `altitude` seems to be intended as "altitude in feet" or just tracking
 
     if (watch('densityUnit') === 'kg/m3') {
       setValue('density', isa.calculateDensity().toKgM3());
@@ -69,18 +83,37 @@ export default function LiftAndDrag({ active }: { active: string }) {
     setVelocity(watch('velocity'));
     setCl(watch('cl'));
     setCd(watch('cd'));
-    setDensity(watch('density'));
-    setWingArea(watch('wingArea'));
-    setWingspan(watch('wingspan'));
-    setChord(watch('chord'));
+
+    // Always set density atom in kgf-s2/m4 for calculations
+    const altitudeVal = watch('altitude');
+    const altitudeUnit = watch('altitudeUnit');
+    const altitudeInFeet = altitudeUnit === 'meters' ? altitudeVal * Math.pow(FEET_TO_METERS, -1) : altitudeVal;
+    const isa = new ISA(altitudeInFeet);
+    setDensity(isa.calculateDensity().toKgfS2M4());
+
+    const wingspan = parseFloat(watch('wingspan')) || 0;
+    const chord = parseFloat(watch('chord')) || 0;
+    let wingArea = parseFloat(watch('wingArea')) || 0;
+
+    // Calculate Wing Area if not provided but wingspan and chord are available
+    if ((!wingArea) && wingspan && chord) {
+      wingArea = wingspan * chord;
+      setValue('wingArea', wingArea);
+    }
+
+    setWingArea(wingArea);
+    setWingspan(wingspan);
+    setChord(chord);
   }, [
     watch('velocity'),
     watch('cl'),
     watch('cd'),
     watch('density'),
-    watch('wingArea'),
+    watch('wingArea'), // dependency ensures we react to user input clearing the area too
     watch('wingspan'),
     watch('chord'),
+    watch('altitude'),
+    watch('altitudeUnit')
   ]);
 
   return (

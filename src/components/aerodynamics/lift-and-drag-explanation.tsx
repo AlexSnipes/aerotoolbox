@@ -28,11 +28,17 @@ export default function LiftAndDragExplanation() {
   isa.setAltitude(altitude);
 
   useEffect(() => {
-    if (!wingArea) {
+    if (!wingArea && chord && wingspan) {
       setWingArea(chord * wingspan);
     }
-    setLift(cl * wingArea * 0.5 * density * Math.pow(velocity, 2));
-    setDrag(cd * wingArea * 0.5 * density * Math.pow(velocity, 2));
+    const safeCl = cl || 0;
+    const safeCd = cd || 0;
+    const safeWingArea = wingArea || 0;
+    const safeDensity = density || 0;
+    const safeVelocity = velocity || 0;
+
+    setLift(safeCl * safeWingArea * 0.5 * safeDensity * Math.pow(safeVelocity, 2));
+    setDrag(safeCd * safeWingArea * 0.5 * safeDensity * Math.pow(safeVelocity, 2));
   }, [velocity, cl, cd, wingArea, density, chord, wingspan]);
 
   return (
